@@ -1,7 +1,8 @@
+
 # Ignorar dependências do Composer
 /vendor/
-/composer.lock
 
+!composer.lock
 # Ignorar arquivos de sistema
 *.log
 *.tmp
