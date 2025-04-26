@@ -1,0 +1,13 @@
+# Ignorar dependências do Composer
+/vendor/
+
+# Ignorar arquivos de sistema
+*.log
+*.tmp
+
+# Ignorar arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ignorar arquivos de cache
+/cache/
