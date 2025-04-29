@@ -67,12 +67,23 @@ class BancoDoBrasilBoleto {
     private $formatadorHelper;
     
     public function __construct() {
-        $this->logoBanco = 'resources/images/' . 'bb.jpg'; // Caminho para o logo do Banco do Brasil
+        $this->logoBanco = 'bb.jpg'; // Caminho para o logo do Banco do Brasil
         //$this->dataDocumento = date('d/m/Y');
         //$this->dataProcessamento = date('d/m/Y');
         $this->formatadorHelper = new FormatadorBancarioService ();
+        // Marca a pasta de resources padrão, caso não seja especificado
+
     }
     
+     /**
+     * Define a localização da pasta de resources
+     *
+     * @return string
+     */
+    public function getResourcePath()
+    {
+        return $this->resourcePath;
+    }
     /**
      * Configurar informações do beneficiário
      */
@@ -164,7 +175,15 @@ class BancoDoBrasilBoleto {
          
         $this->qrcode = $imagemBase64;
     }
-    
+    /**
+     * Retorna a localização do logotipo do banco relativo à pasta de imagens
+     *
+     * @return string
+     */
+    public function getLogoBanco()
+    {
+        return $this->logoBanco;
+    }
     /**
      * Configurar logotipo do beneficiário
      */
@@ -172,6 +191,21 @@ class BancoDoBrasilBoleto {
         $this->logotipo = __DIR__. '/../../resources/images/' . $logoBanco;
     }
     
+        /**
+     * Retorna o logotipo do banco em Base64, pronto para ser inserido na página
+     *
+     * @return string
+     */
+    public function getLogoBancoBase64()
+    {
+        static $logoData;
+
+        $logoData or $logoData = 'data:image/' . pathinfo($this->getLogoBanco(), PATHINFO_EXTENSION) .
+            ';base64,' . base64_encode(file_get_contents(__DIR__ . '/../../resources' .
+            '/images/' . $this->getLogoBanco()));
+
+        return $logoData;
+    }
     /**
      * Configurar caminho para recursos (CSS, imagens)
      */
@@ -220,8 +254,8 @@ class BancoDoBrasilBoleto {
             'cedente_cpf_cnpj' => $this->beneficiarioCpfCnpj ?: '',
             'cedente_endereco1' => $this->beneficiarioEndereco1 ?: '',
             'cedente_endereco2' => $this->beneficiarioEndereco2 ?: '',
-            'logotipo' => $this->logotipo ?: '',
-            'logo_banco' => $this->logoBanco ?: '',
+            'logotipo' => $this->getLogoBancoBase64() ?: '',
+            'logo_banco' => $this->getLogoBancoBase64() ?: '',
             'codigo_banco_com_dv' => $this->codigoBanco . '-9',
             'linha_digitavel' => $this->linhaDigitavel ?: '',
             'agencia_codigo_cedente' => ($this->agencia ?: '') . ' / ' . ($this->conta ?: ''),
